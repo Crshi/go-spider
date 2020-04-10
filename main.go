@@ -9,6 +9,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/Crshi/go-spider/pkg/setting"
+	"github.com/Crshi/go-spider/routers"
 )
 
 func main() {

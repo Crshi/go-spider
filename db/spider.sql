@@ -18,8 +18,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for spider_books
 -- ----------------------------
-DROP TABLE IF EXISTS `spider_books`;
-CREATE TABLE `spider_books` (
+DROP TABLE IF EXISTS `books`;
+CREATE TABLE `books` (
   `Id` int(11) NOT NULL,
   `Name` char(255) DEFAULT NULL,
   `Type` tinyint(4) DEFAULT NULL,
@@ -33,8 +33,8 @@ CREATE TABLE `spider_books` (
 -- ----------------------------
 -- Table structure for spider_chapters
 -- ----------------------------
-DROP TABLE IF EXISTS `spider_chapters`;
-CREATE TABLE `spider_chapters` (
+DROP TABLE IF EXISTS `chapters`;
+CREATE TABLE `chapters` (
   `Id` int(11) NOT NULL,
   `Content` int(11) DEFAULT NULL,
   `BookId` varchar(10240) DEFAULT NULL,

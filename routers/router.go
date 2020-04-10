@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/Crshi/go-spider/pkg/setting"
+	v1 "github.com/Crshi/go-spider/routers/api/v1"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +24,6 @@ func InitRouter() *gin.Engine {
 	{
 		//爬取小说
 		apiv1.GET("/crawl", v1.CrawlBooks)
-
 		//下载小说
 		apiv1.GET("/download", v1.DownloadBooks)
 	}
