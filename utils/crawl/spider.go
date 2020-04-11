@@ -22,7 +22,7 @@ func (bs *BookTextSpider) CrawlBook(url string) bool {
 	}
 
 	bookname := mahonia.GbkToUtf8(doc.Find("#info h1").Text())
-	author := mahonia.GbkToUtf8(doc.Find("#info p a").Text())
+	author := mahonia.GbkToUtf8(doc.Find("#info p a").First().Text())
 
 	book := models.GetBookByName(bookname)
 	book.Author = author
@@ -41,10 +41,10 @@ func (bs *BookTextSpider) CrawlBook(url string) bool {
 		title := mahonia.GbkToUtf8(contentSelection.Find("a").Text())
 		href, _ := contentSelection.Find("a").Attr("href")
 		chapter := models.Chapter{
-			Title:  title,
-			Order:  i + 1,
-			BookId: book.Id,
-			Url:    url + href,
+			Title:   title,
+			Order:   i + 1,
+			Book_Id: book.Id,
+			Url:     url + href,
 		}
 
 		channel <- struct{}{}
@@ -71,5 +71,6 @@ func CrawlChaptersInfo(chapter models.Chapter, c chan struct{}) {
 	content := doc.Find("#content").Text()
 	content = mahonia.GbkToUtf8(content)
 	content = strings.Replace(content, "聽", " ", -1)
+	chapter.Content = content
 	models.AddChapter(chapter)
 }

@@ -3,11 +3,11 @@ package models
 type Chapter struct {
 	Model
 
-	Title   string `json:Title`
-	Content string `json:"Content"`
-	BookId  int    `json:"BookId"`
-	Order   int    `json:"Order"`
-	Url     string `json:Url`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Book_Id int    `json:"book_id"`
+	Order   int    `json:"order"`
+	Url     string `json:"url"`
 }
 
 func GetChapters(bookId int) (chapters []Chapter) {
