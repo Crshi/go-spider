@@ -1,14 +1,12 @@
 package v1
 
 import (
-	"fmt"
-	"io/ioutil"
 	"net/http"
-
-	"github.com/Crshi/go-spider/pkg/logging"
 
 	"github.com/Crshi/go-spider/models"
 	"github.com/Crshi/go-spider/pkg/e"
+	"github.com/Crshi/go-spider/pkg/logging"
+	"github.com/Crshi/go-spider/utils/crawl"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +18,7 @@ func GetBooks(c *gin.Context) {
 	code = e.SUCCESS
 
 	results["lists"] = models.GetBooks()
-	results["total"] = models.GetBookCount()
+	// results["total"] = models.GetBookCount()
 
 	c.JSON(http.StatusOK, gin.H{
 		"Code":    code,
@@ -33,22 +31,18 @@ func GetBooks(c *gin.Context) {
 func CrawlBooks(c *gin.Context) {
 	bookSiteId := c.Query("bookSiteId")
 
-	resp, err := http.Get("https://www.52bqg.com/" + bookSiteId + "/")
-
-	if err != nil {
-		logging.Info("err:Crawl Book Filed, err.message: %s", err)
+	if bookSiteId == "" {
+		bookSiteId = "book_10459"
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	bookUrl := "https://www.52bqg.com/" + bookSiteId + "/"
+
+	s, err := crawl.NewSpider("52bqg")
 	if err != nil {
-		logging.Info("err:Book IO Read Filed, err.message: %s", err)
-		return
+		logging.Fatal("new Spider error: ", err.Error())
 	}
-	fmt.Println(string(body))
-	//根据bookSiteId爬取数据
-	//create book
-	//create chapters
-	//return
+
+	s.CrawlBook(bookUrl)
 }
 
 //下载Book

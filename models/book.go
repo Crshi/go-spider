@@ -3,8 +3,9 @@ package models
 type Book struct {
 	Model
 
-	Name string `json:"Name"`
-	Type int    `json:"Type"`
+	Name   string `json:"Name"`
+	Type   int    `json:"Type"`
+	Author string `json:"Author"`
 }
 
 func GetBooks() (books []Book) {
@@ -13,17 +14,13 @@ func GetBooks() (books []Book) {
 	return
 }
 
-func GetBookCount() (count int) {
-	db.Model(&Book{}).Count(&count)
+func GetBookByName(name string) (book Book) {
+	db.Where("Name = ?", name).Find(&book)
 
 	return
 }
 
-func CreateBook(name string, bookType int) bool {
-	db.Create(&Book{
-		Name: name,
-		Type: bookType,
-	})
-
-	return true
+func CreateBook(book Book) Book {
+	db.Create(&book)
+	return book
 }

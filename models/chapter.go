@@ -1,12 +1,13 @@
 package models
 
-import "strconv"
-
 type Chapter struct {
 	Model
 
+	Title   string `json:Title`
 	Content string `json:"Content"`
 	BookId  int    `json:"BookId"`
+	Order   int    `json:"Order"`
+	Url     string `json:Url`
 }
 
 func GetChapters(bookId int) (chapters []Chapter) {
@@ -14,15 +15,14 @@ func GetChapters(bookId int) (chapters []Chapter) {
 	return
 }
 
-func AddChapters(datas []string, bookId int) bool {
-	sql := "Insert into `chapters` (`BookId`,`Content`) Values"
-	for _, v := range datas {
-		sql += "(" + strconv.Itoa(bookId) + ",'" + v + "'),"
-	}
-
-	sql = sql[:len(sql)-1] + ";"
-
-	db.Exec(sql)
+func AddChapter(chapter Chapter) bool {
+	db.Create(&chapter)
 
 	return true
+}
+
+func CheckChapter(order int, bookId int) (count int) {
+	db.Model(&Chapter{}).Where("Order = ? AND BookId = ?", order, bookId).Count(&count)
+
+	return
 }
