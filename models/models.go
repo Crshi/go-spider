@@ -20,7 +20,7 @@ type Model struct {
 	// DeletedOn  int `json:"deleted_on"`
 }
 
-func init() {
+func Setup() {
 	var (
 		err                                  error
 		dbType, dbName, user, password, host string

@@ -3,6 +3,7 @@ module github.com/Crshi/go-spider
 go 1.14
 
 require (
+	github.com/EDDYCJY/go-gin-example v0.0.0-20200322073714-2b22b57dfce9
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
@@ -12,6 +13,7 @@ require (
 	github.com/go-openapi/swag v0.19.8 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/golang/protobuf v1.3.5 // indirect
+	github.com/gomodule/redigo v2.0.1-0.20180401191855-9352ab68be13+incompatible
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/lib/pq v1.2.0 // indirect
@@ -39,4 +41,5 @@ replace (
 	github.com/Crshi/go-spider/utils/crawl => ./utils/crawl
 	github.com/Crshi/go-spider/utils/mahonia => ./utils/mahonia
 	github.com/Crshi/go-spider/utils/response => ./utils/response
+	github.com/Crshi/go-spider/service/cache_service => ./service/cache_service
 )

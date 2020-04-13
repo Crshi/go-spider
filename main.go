@@ -9,9 +9,19 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/Crshi/go-spider/models"
+	"github.com/Crshi/go-spider/pkg/gredis"
+	"github.com/Crshi/go-spider/pkg/logging"
 	"github.com/Crshi/go-spider/pkg/setting"
 	"github.com/Crshi/go-spider/routers"
 )
+
+func init() {
+	setting.Setup()
+	models.Setup()
+	logging.Setup()
+	gredis.Setup()
+}
 
 func main() {
 	router := routers.InitRouter()

@@ -47,7 +47,7 @@ type Server struct {
 }
 
 //加载配置文件
-func init() {
+func Setup() {
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
 	if err != nil {
@@ -60,6 +60,20 @@ func init() {
 	LoadServer()
 	//从配置文件JwtSecret，PageSize
 	LoadApp()
+	//配置Redis
+	LoadRedis()
+}
+
+func LoadRedis() {
+	sec, err := Cfg.GetSection("redis")
+	if err != nil {
+		log.Fatalf("Fail to get section 'redis': %v", err)
+	}
+	RedisSetting.Host = sec.Key("Host").String()
+	RedisSetting.Password = sec.Key("Password").String()
+	RedisSetting.MaxIdle = sec.Key("MaxIdle").MustInt(30)
+	RedisSetting.MaxActive = sec.Key("MaxActive").MustInt(30)
+	RedisSetting.IdleTimeout = time.Duration(sec.Key("IdleTimeout").MustInt(60)) * time.Second
 }
 
 func LoadBase() {

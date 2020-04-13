@@ -1,13 +1,14 @@
 package v1
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/Crshi/go-spider/models"
 	"github.com/Crshi/go-spider/pkg/e"
+	"github.com/Crshi/go-spider/pkg/gredis"
 	"github.com/Crshi/go-spider/pkg/logging"
+	"github.com/Crshi/go-spider/service/cache_service"
 	"github.com/Crshi/go-spider/utils/crawl"
 	"github.com/gin-gonic/gin"
 )
@@ -44,7 +45,7 @@ func CrawlBooks(c *gin.Context) {
 	bookSiteId := c.Query("bookSiteId")
 
 	if bookSiteId == "" {
-		bookSiteId = "book_10459"
+		return
 	}
 
 	bookUrl := "https://www.52bqg.com/" + bookSiteId + "/"
@@ -78,17 +79,30 @@ func DownloadBooks(c *gin.Context) {
 
 	bookid, _ := strconv.Atoi(c.Query("bookid"))
 	book := models.GetBookById(int(bookid))
-
-	chapters := models.GetChapters(bookid)
-
 	content := ""
-	for _, v := range chapters {
-		content += v.Content
+	key := cache_service.GetBookKey(book.Id)
+
+	if gredis.Exists(key) {
+		tmpContent, err := gredis.Get(key)
+		if err != nil {
+			logging.Info(err)
+		}
+		content = string(tmpContent)
+	} else {
+		chapters := models.GetChapters(bookid)
+
+		for _, v := range chapters {
+			content += v.Content
+		}
 	}
 
-	c.Writer.WriteHeader(http.StatusOK)
-	c.Header("Content-Disposition", "attachment; filename="+book.Name+".txt")
-	c.Header("Content-Type", "application/text/plain")
-	c.Header("Accept-Length", fmt.Sprintf("%d", len(content)))
-	c.Writer.Write([]byte(content))
+	gredis.Set(key, content, 3600)
+
+	code := e.SUCCESS
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": content,
+	})
 }
