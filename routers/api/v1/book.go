@@ -14,7 +14,7 @@ import (
 )
 
 //获取所有books
-// @Summary Get multiple books
+// @Summary Get all books
 // @Produce  json
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
@@ -34,13 +34,13 @@ func GetBooks(c *gin.Context) {
 }
 
 //爬取Book
-// @Summary CrawlBooks
+// @Summary Crawl Book
 // @Produce  json
 // @Param bookSiteId query string true "BookSiteId"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /api/v1/crawl [post]
-func CrawlBooks(c *gin.Context) {
+func CrawlBook(c *gin.Context) {
 	res := make(map[string]int)
 	bookSiteId := c.Query("bookSiteId")
 
@@ -66,43 +66,46 @@ func CrawlBooks(c *gin.Context) {
 	})
 }
 
-//下载Book
-// @Summary DownloadBooks
+// 获取章节
+// @Summary GetChapter
 // @Produce  json
 // @Param bookid query int false "BookId"
+// @Param order query int false "Order"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
-// @Router /api/v1/download [post]
-func DownloadBooks(c *gin.Context) {
+// @Router /api/v1/chapter [get]
+func GetChapter(c *gin.Context) {
 	//从redis取数据
 	//如果没有从数据库取数据并更新到redis
 
 	bookid, _ := strconv.Atoi(c.Query("bookid"))
-	book := models.GetBookById(int(bookid))
-	content := ""
-	key := cache_service.GetBookKey(book.Id)
+	order, _ := strconv.Atoi(c.Query("order"))
+	key := cache_service.GetChapterKey(bookid, order)
+	res := make(map[string]string)
+	res["bookid"] = strconv.Itoa(bookid)
+	res["order"] = strconv.Itoa(order)
 
+	//有缓存
 	if gredis.Exists(key) {
+		//获取缓存
 		tmpContent, err := gredis.Get(key)
 		if err != nil {
 			logging.Info(err)
 		}
-		content = string(tmpContent)
+		res["content"] = string(tmpContent)
 	} else {
-		chapters := models.GetChapters(bookid)
-
-		for _, v := range chapters {
-			content += v.Content
-		}
+		chapter := models.GetChapterByOrder(order, bookid)
+		res["content"] = chapter.Content
+		gredis.Set(key, chapter.Content, 3600)
 	}
 
-	gredis.Set(key, content, 3600)
+	gredis.SetExpire(key, 3600)
 
 	code := e.SUCCESS
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
-		"data": content,
+		"data": res,
 	})
 }

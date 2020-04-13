@@ -21,8 +21,14 @@ func AddChapter(chapter Chapter) bool {
 	return true
 }
 
-func GetChapter(title string, bookId int) (chapter Chapter) {
+func GetChapterByTitle(title string, bookId int) (chapter Chapter) {
 	db.Where("title = ? AND book_id = ?", title, bookId).First(&chapter)
+
+	return
+}
+
+func GetChapterByOrder(order int, bookId int) (chapter Chapter) {
+	db.Where("`order` = ? AND book_id = ?", order, bookId).First(&chapter)
 
 	return
 }

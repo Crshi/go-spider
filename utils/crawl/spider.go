@@ -59,7 +59,7 @@ func (bs *BookTextSpider) CrawlBook(url string) int {
 func CrawlChaptersInfo(chapter models.Chapter, c chan struct{}) {
 	defer func() { <-c }()
 
-	checkChapter := models.GetChapter(chapter.Title, chapter.Book_Id)
+	checkChapter := models.GetChapterByTitle(chapter.Title, chapter.Book_Id)
 
 	if checkChapter.Id == 0 {
 		doc, err := goquery.NewDocument(chapter.Url)
@@ -72,6 +72,5 @@ func CrawlChaptersInfo(chapter models.Chapter, c chan struct{}) {
 		content = strings.Replace(content, "聽", " ", -1)
 		chapter.Content = content
 		models.AddChapter(chapter)
-		//更新缓存
 	}
 }

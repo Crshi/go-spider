@@ -27,12 +27,12 @@ func InitRouter() *gin.Engine {
 
 	apiv1 := r.Group("/api/v1")
 	{
-		//爬取小说
+		//查看小说
 		apiv1.GET("/books", v1.GetBooks)
 		//爬取小说
-		apiv1.POST("/crawl", v1.CrawlBooks)
-		//下载小说
-		apiv1.POST("/download", v1.DownloadBooks)
+		apiv1.POST("/crawl", v1.CrawlBook)
+		//获取小说章节
+		apiv1.GET("/chapter", v1.GetChapter)
 	}
 
 	return r

@@ -25,7 +25,30 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Get multiple books
+      summary: Get all books
+  /api/v1/chapter:
+    get:
+      parameters:
+      - description: BookId
+        in: query
+        name: bookid
+        type: integer
+      - description: Order
+        in: query
+        name: order
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: GetChapter
   /api/v1/crawl:
     post:
       parameters:
@@ -45,24 +68,5 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: CrawlBooks
-  /api/v1/download:
-    post:
-      parameters:
-      - description: BookId
-        in: query
-        name: bookid
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: DownloadBooks
+      summary: Crawl Book
 swagger: "2.0"

@@ -10,7 +10,43 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get multiple books",
+                "summary": "Get all books",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/chapter": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "GetChapter",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "BookId",
+                        "name": "bookid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Order",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -32,7 +68,7 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "CrawlBooks",
+                "summary": "Crawl Book",
                 "parameters": [
                     {
                         "type": "string",
@@ -40,36 +76,6 @@
                         "name": "bookSiteId",
                         "in": "query",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/download": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "DownloadBooks",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "BookId",
-                        "name": "bookid",
-                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -86,21 +86,11 @@ func Delete(key string) (bool, error) {
 	return redis.Bool(conn.Do("DEL", key))
 }
 
-func LikeDeletes(key string) error {
+func SetExpire(key string, time int) {
 	conn := RedisConn.Get()
 	defer conn.Close()
 
-	keys, err := redis.Strings(conn.Do("KEYS", "*"+key+"*"))
-	if err != nil {
-		return err
-	}
+	conn.Do("EXPIRE", key, time)
 
-	for _, key := range keys {
-		_, err = Delete(key)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return
 }
