@@ -3,7 +3,7 @@ package crawl
 import "errors"
 
 type Spider interface {
-	CrawlBook(url string) bool
+	CrawlBook(url string) int
 }
 
 func NewSpider(from string) (Spider, error) {

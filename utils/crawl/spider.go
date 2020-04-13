@@ -12,13 +12,13 @@ import (
 type BookTextSpider struct {
 }
 
-func (bs *BookTextSpider) CrawlBook(url string) bool {
+func (bs *BookTextSpider) CrawlBook(url string) int {
 
 	doc, err := goquery.NewDocument(url)
 
 	if err != nil {
 		logging.Fatal("get document error: ", err.Error())
-		return false
+		return 0
 	}
 
 	bookname := mahonia.GbkToUtf8(doc.Find("#info h1").Text())
@@ -30,9 +30,6 @@ func (bs *BookTextSpider) CrawlBook(url string) bool {
 
 	if book.Id == 0 {
 		book = models.CreateBook(book)
-	} else {
-		logging.Fatal("book alredy exist!")
-		return false
 	}
 
 	channel := make(chan struct{}, 100)
@@ -56,21 +53,25 @@ func (bs *BookTextSpider) CrawlBook(url string) bool {
 	}
 	close(channel)
 
-	return true
+	return book.Id
 }
-
-type ChanTag struct{}
 
 func CrawlChaptersInfo(chapter models.Chapter, c chan struct{}) {
 	defer func() { <-c }()
-	doc, err := goquery.NewDocument(chapter.Url)
-	if err != nil {
-		logging.Error("get chapter details error: ", err.Error())
-		return
+
+	checkChapter := models.GetChapter(chapter.Title, chapter.Book_Id)
+
+	if checkChapter.Id == 0 {
+		doc, err := goquery.NewDocument(chapter.Url)
+		if err != nil {
+			logging.Error("get chapter details error: ", err.Error())
+			return
+		}
+		content := doc.Find("#content").Text()
+		content = mahonia.GbkToUtf8(content)
+		content = strings.Replace(content, "聽", " ", -1)
+		chapter.Content = content
+		models.AddChapter(chapter)
+		//更新缓存
 	}
-	content := doc.Find("#content").Text()
-	content = mahonia.GbkToUtf8(content)
-	content = strings.Replace(content, "聽", " ", -1)
-	chapter.Content = content
-	models.AddChapter(chapter)
 }

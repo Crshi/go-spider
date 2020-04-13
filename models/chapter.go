@@ -11,7 +11,7 @@ type Chapter struct {
 }
 
 func GetChapters(bookId int) (chapters []Chapter) {
-	db.Where("BookId = ?", bookId).Find(&chapters)
+	db.Where("book_id = ?", bookId).Order("order").Find(&chapters)
 	return
 }
 
@@ -21,8 +21,8 @@ func AddChapter(chapter Chapter) bool {
 	return true
 }
 
-func CheckChapter(order int, bookId int) (count int) {
-	db.Model(&Chapter{}).Where("Order = ? AND BookId = ?", order, bookId).Count(&count)
+func GetChapter(title string, bookId int) (chapter Chapter) {
+	db.Where("title = ? AND book_id = ?", title, bookId).First(&chapter)
 
 	return
 }

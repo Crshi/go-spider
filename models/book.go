@@ -14,6 +14,13 @@ func GetBooks() (books []Book) {
 	return
 }
 
+func GetBookById(id int) Book {
+	var book Book
+	db.First(&book, id)
+
+	return book
+}
+
 func GetBookByName(name string) Book {
 	var book Book
 	db.Where("Name = ?", name).First(&book)
