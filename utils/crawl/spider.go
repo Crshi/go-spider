@@ -34,18 +34,23 @@ func (bs *BookTextSpider) CrawlBook(url string) int {
 
 	channel := make(chan struct{}, 100)
 
+	order := 0
+
 	doc.Find("#list dd").Each(func(i int, contentSelection *goquery.Selection) {
 		title := mahonia.GbkToUtf8(contentSelection.Find("a").Text())
-		href, _ := contentSelection.Find("a").Attr("href")
-		chapter := models.Chapter{
-			Title:   title,
-			Order:   i + 1,
-			Book_Id: book.Id,
-			Url:     url + href,
-		}
+		if title != "" {
+			order++
+			href, _ := contentSelection.Find("a").Attr("href")
+			chapter := models.Chapter{
+				Title:   title,
+				Order:   order,
+				Book_Id: book.Id,
+				Url:     url + href,
+			}
 
-		channel <- struct{}{}
-		go CrawlChaptersInfo(chapter, channel)
+			channel <- struct{}{}
+			go CrawlChaptersInfo(chapter, channel)
+		}
 	})
 
 	for i := 0; i < 100; i++ {

@@ -11,7 +11,6 @@ import (
 
 	"github.com/Crshi/go-spider/models"
 	"github.com/Crshi/go-spider/pkg/gredis"
-	"github.com/Crshi/go-spider/pkg/logging"
 	"github.com/Crshi/go-spider/pkg/setting"
 	"github.com/Crshi/go-spider/routers"
 )
@@ -19,7 +18,7 @@ import (
 func init() {
 	setting.Setup()
 	models.Setup()
-	logging.Setup()
+	// logging.Setup()
 	gredis.Setup()
 }
 
