@@ -76,6 +76,13 @@
                         "name": "bookSiteId",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "threadCount",
+                        "name": "threadCount",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

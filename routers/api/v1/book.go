@@ -37,12 +37,14 @@ func GetBooks(c *gin.Context) {
 // @Summary Crawl Book
 // @Produce  json
 // @Param bookSiteId query string true "BookSiteId"
+// @Param threadCount query int true "threadCount"
 // @Success 200 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Router /api/v1/crawl [post]
 func CrawlBook(c *gin.Context) {
 	res := make(map[string]int)
 	bookSiteId := c.Query("bookSiteId")
+	thread, _ := strconv.Atoi(c.Query("threadCount"))
 
 	if bookSiteId == "" {
 		return
@@ -57,7 +59,7 @@ func CrawlBook(c *gin.Context) {
 
 	code := e.SUCCESS
 
-	res["bookid"] = s.CrawlBook(bookUrl)
+	res["bookid"] = s.CrawlBook(bookUrl, thread)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,

@@ -12,7 +12,7 @@ import (
 type BookTextSpider struct {
 }
 
-func (bs *BookTextSpider) CrawlBook(url string) int {
+func (bs *BookTextSpider) CrawlBook(url string, thread int) int {
 
 	doc, err := goquery.NewDocument(url)
 
@@ -32,7 +32,7 @@ func (bs *BookTextSpider) CrawlBook(url string) int {
 		book = models.CreateBook(book)
 	}
 
-	channel := make(chan struct{}, 100)
+	channel := make(chan struct{}, thread)
 
 	order := 0
 
@@ -53,7 +53,7 @@ func (bs *BookTextSpider) CrawlBook(url string) int {
 		}
 	})
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < thread; i++ {
 		channel <- struct{}{}
 	}
 	close(channel)

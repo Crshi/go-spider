@@ -57,6 +57,11 @@ paths:
         name: bookSiteId
         required: true
         type: string
+      - description: threadCount
+        in: query
+        name: threadCount
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
